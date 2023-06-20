@@ -12,7 +12,8 @@ const serviceLogin = {
       const { mail, password } = req.body;    
       const user = await Professional.findOne({ mail });
       const maxLoginAttempts = 3;
-      
+      console.log(mail, password)
+      //console.log(user)
       // Verifique se o usuário existe no banco de dados
       if (!user) {
         return res.status(401).json({ error: "Email inválido." });
@@ -22,7 +23,8 @@ const serviceLogin = {
       if (user.isBlocked) {
         return res.status(401).json({ error: 'A conta está bloqueada. Entre em contato com o Administrador.' });
       }
-
+      const userName = user.name;
+      const id = user.id;
       // Verifique a senha do usuário
       const passwordMatch = await bcrypty.compare(password, user.password);
            
@@ -48,7 +50,7 @@ const serviceLogin = {
       const token = jwt.sign({ userId: user._id }, env.authSecret, { expiresIn: '24h' });
       
       // Login bem-sucedido, retorna o token de acesso
-      res.json({ user, token });
+      res.json({id, userName, token });
       
     } catch (error) {
       console.log(error);

@@ -28,6 +28,15 @@ router
     .route("/professional/:id")
     .get(authenticateToken, (req, res) => serviceController.get(req, res))
 
+router
+    .route("/professional/mail/:mail")
+    .get(authenticateToken, (req, res) => serviceController.getMail(req, res))
+
+router
+    .route("/professional/patients/:id")
+    .get(authenticateToken, (req, res) => serviceController.getPatients(req, res))
+
+
 // Contar todos os cadastros, não está funcionando
 router
     .route('/professional/count')
