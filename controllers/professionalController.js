@@ -1,4 +1,5 @@
 const { Professional: ProfessionalModel, Professional } = require("../models/professional")
+const { Patient: PatientModel, Patient } = require('../models/patient')
 const regexLetters = /^[a-zA-Z]+$/;
 const checkSpaces = /^\s*$/;
 const mailRegex = /\S+@\S+\.\S+/;
@@ -282,6 +283,37 @@ const serviceController = {
             console.log(error);
         }
     },
+
+    getMail: async (req, res) => {
+        try {
+          const mail = req.params.mail;
+          const professional = await ProfessionalModel.findOne({ mail });
+      
+          if (!professional) {
+            res.status(404).json({ msg: "Profissional não encontrado" });
+            return;
+          }
+      
+          res.json(professional);
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({ msg: "Ocorreu um erro ao buscar o profissional" });
+        }
+      },
+
+      getPatients:async (req, res) => {
+        try {
+          const professionalId = req.params.id;
+      
+          // Busque os pacientes vinculados ao profissional com o ID fornecido
+          const patients = await PatientModel.find({ professional: professionalId });
+      
+          res.json(patients);
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({ message: "Ocorreu um erro ao buscar os pacientes vinculados ao profissional" });
+        }
+      },
 
     delete: async (req, res) => {
         try {
