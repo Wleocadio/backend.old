@@ -4,9 +4,12 @@ const mongoose = require("mongoose")
 const scheduleSchema = new mongoose.Schema({
     professionalId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     date: { type: Date, required: true },
-    observation: {type: String},
+    serviceValue: {type: Number, required: true},
+    notes: {type: String},
     vague: {type: Boolean, required:true},
-    patientId:{type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: false}
+    duration: {type: Number, required: true},
+    patientId:{type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true},
+    patientName: {type: String}
 },
 {timestamps: true}
 );

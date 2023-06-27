@@ -6,27 +6,31 @@ const scheduleController = {
 
   createSchedule: async (req, res) => {
 
-    const { date, vague, observation } = req.body;
-    const patientName = req.body.patientName; 
+    const { date, notes,duration,serviceValue } = req.body;
+    const vague = req.body.vague || false;
+    const patientId = req.body.patientId; 
     const userID = req.userId; // Supondo que você tenha a informação do usuário logado
 
     try {
-      const existingSchedule = await ScheduleModel.findOne({ user: userID, date: new Date(date) });
+      const existingSchedule = await ScheduleModel.findOne({ professionalId: userID, date: new Date(date) });
 
       if (existingSchedule) {
         return res.status(400).json({ error: "Já existe um resgistro nessa data e horário" })
       }
 
-      const patient = await PatientModel.findOne({ name: patientName })
-
+      const patient = await PatientModel.findById(patientId)
       
       const newSchedule = new ScheduleModel({
         professionalId: userID,
         date: new Date(date),
-        observation,
+        serviceValue,
+        notes,
         vague,
+        duration,
+        patientName:patient.name
+                     
       });
-      console.log(userID, date,observation, vague, patient)
+      //console.log(userID, date,notes, vague,serviceValue, patientId)
 
       if(patient){
         newSchedule.patientId = patient._id;
@@ -79,6 +83,19 @@ const scheduleController = {
       console.log(error);
     }
   },
+  getMyShedule: async (req, res) => {
+    try {
+      const professionalId = req.params.id;
+      const schedulesId = await ScheduleModel.find({professionalId: professionalId});
+      console.log(professionalId)
+      if (schedulesId.length === 0) {
+        return res.status(404).json({ msg: "Nenhum agendamento encontrado para o profissional" });
+      }
+      res.json(schedulesId);
+    } catch (error) {
+      res.status(500).json({ message: "Ocorreu um erro ao buscar a Agenda do profissional" });
+    }
+  },
   delete: async(req, res) => {
     try {
       const id = req.params.id;
@@ -104,8 +121,10 @@ const scheduleController = {
     const service = {
       patientId:req.body.patient,
        date: req.body.date,
+       serviceValue: req.body.serviceValue,
        vague: req.body.vague,
-       observation: req.body.observation,
+       notes: req.body.notes,
+       duration: req.body.duration,
        
     };
 

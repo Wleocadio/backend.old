@@ -25,16 +25,19 @@ const patientController = {
       const nameEmergencyContact = req.body.nameEmergencyContact || '';
       const gender = req.body.gender || '';
       const dateBirth = req.body.dateBirth || '';
+      const maritalStatus = req.body.maritalStatus || '';
       const zipCode = req.body.zipCode || '';
       const state = req.body.state || '';
       const city = req.body.city || '';
       const district = req.body.district || '';
       const street = req.body.street || '';
       const number = req.body.number || '';
-      const reasonOfConsultation = req.body.reasonOfConsultation || '';
-      const observation = req.body.observation || '';
+      const initialDemand = req.body.initialDemand || '';
+      const purposeTreatment = req.body.purposeTreatment || '';
+      const patientEvolution = req.body.patientEvolution || '';
+      const generalNotes = req.body.generalNotes || '';
       const image = req.body.image || '';
-      const active = req.body.active || '';
+      const active = req.body.active || true;
 
 
       const existingPatient = await PatientModel.findOne({ cpf: cpf });
@@ -105,6 +108,11 @@ const patientController = {
       }
 
 
+      if (maritalStatus == null || maritalStatus == "" || maritalStatus.match(checkSpaces)) {
+        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+      }
+
+
 
       //Validação Cep
       if (zipCode == null || zipCode == "" || zipCode.match(checkSpaces)) {
@@ -149,14 +157,21 @@ const patientController = {
 
 
       //Validação Motivo da consulta
-      if (reasonOfConsultation == null || reasonOfConsultation == "" || reasonOfConsultation.match(checkSpaces)) {
+      if (initialDemand == null || initialDemand == "" || initialDemand.match(checkSpaces)) {
         return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
       }
 
 
-
       //Validação Observação
-      if (observation == null || observation == "" || observation.match(checkSpaces)) {
+      if (purposeTreatment == null || purposeTreatment == "" || purposeTreatment.match(checkSpaces)) {
+        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+      }
+
+      if (patientEvolution == null || patientEvolution == "" || patientEvolution.match(checkSpaces)) {
+        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+      }
+
+      if (generalNotes == null || generalNotes == "" || generalNotes.match(checkSpaces)) {
         return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
       }
 
@@ -186,14 +201,17 @@ const patientController = {
         nameEmergencyContact,
         gender,
         dateBirth,
+        maritalStatus,
         zipCode,
         state,
         city,
         district,
         street,
         number,
-        reasonOfConsultation,
-        observation,
+        initialDemand,
+        purposeTreatment,
+        patientEvolution,
+        generalNotes,
         image,
         active,
         professionalId: professionalID
@@ -279,14 +297,17 @@ const patientController = {
       nameEmergencyContact: req.body.nameEmergencyContact,
       gender: req.body.gender,
       dateBirth: req.body.dateBirth,
+      maritalStatus: req.body.maritalStatus,
       zipCode: req.body.zipCode,
       state: req.body.state,
       city: req.body.city,
       district: req.body.district,
       street: req.body.street,
       number: req.body.number,
-      reasonOfConsultation: req.body.reasonOfConsultation,
-      observation: req.body.observation,
+      initialDemand: req.body.initialDemand,
+      purposeTreatment: req.body.purposeTreatment,
+      patientEvolution: req.body.patientEvolution,
+      generalNotes: req.body.generalNotes,
       image: req.body.image,
       active: req.body.active
     };
