@@ -11,17 +11,20 @@ const patientSchema = new mongoose.Schema({
     nameEmergencyContact: {type: String},
     gender: { type: String },
     dateBirth: { type: Date, },
+    maritalStatus: {type: String},
     zipCode: { type: String },
     state: { type: String },
     city: { type: String },
     district: { type: String },
     street: { type: String },
     number: { type: Number },    
-    reasonOfConsultation: { type: String, required: true },
-    observation: { type: String },
+    initialDemand: { type: String, required: true },
+    purposeTreatment: { type: String },
+    patientEvolution: { type: String },
+    generalNotes: { type: String },    
     image: { type: String },
-    active: { type: Boolean }
-},
+    active: { type: Boolean, required: true},
+   },
 { timestamps: true }
 );
 const Patient = mongoose.model('patient', patientSchema)

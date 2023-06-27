@@ -304,9 +304,9 @@ const serviceController = {
       getPatients:async (req, res) => {
         try {
           const professionalId = req.params.id;
-      
+            console.log(professionalId)
           // Busque os pacientes vinculados ao profissional com o ID fornecido
-          const patients = await PatientModel.find({ professional: professionalId });
+          const patients = await PatientModel.find({ professionalId: professionalId });
       
           res.json(patients);
         } catch (error) {
