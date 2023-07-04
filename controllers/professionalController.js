@@ -1,10 +1,11 @@
 const { Professional: ProfessionalModel, Professional } = require("../models/professional")
 const { Patient: PatientModel, Patient } = require('../models/patient')
-const regexLetters = /^[a-zA-Z]+$/;
+const regexLetters = /^[a-zA-Z\s]+$/;
 const checkSpaces = /^\s*$/;
 const mailRegex = /\S+@\S+\.\S+/;
 const regexNumeros = /^[0-9]+$/
 const cnpjRegex = /^(\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2})$/
+const cpfRegex = /^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$/;
 const telephoneRegex = /^\(?(?:[14689][1-9]|2[12478]|3[1234578]|5[1345]|7[134579])\)? ?(?:[2-8]|9[1-9])[0-9]{3}\-?[0-9]{4}$/
 const stringTextRegex = /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/
 const specialCharacters = /^[^!@#$%*+?]+$/;
@@ -32,9 +33,80 @@ const serviceController = {
             const number = req.body.number || '';
             const district = req.body.district || '';
             const image = req.body.image || '';
+            const myPlan = req.body.myPlan || '';
             const loginAttempts = req.body.loginAttempts || 0;
-            const isBlocked  = req.body.isBlocked || false;
+            const isBlocked = req.body.isBlocked || false;
 
+
+
+
+            const nameError = validateName(name);
+            const professionError = validateProfession(profession);
+            const professionRegisterError = validateProfessionRegister(professionRegister);
+            const cpfError = validateCpf(cpf);
+            const cnpjError = validateCnpj(cnpj);
+            const mailError = validatEmail(mail);
+            //const passwordError = 
+            const phoneError = validatePhone(phone);
+            const genderError = validateGender(gender);
+            const birthError = validateBirth(birth);
+            const zipCodeError = validateZipCode(zipCode);
+            const stateError = validateState(state);
+            const cityError = validateCity(city);
+            const streetError = validateStreet(street);
+            const numberError = validateNumber(number);
+            const districtError = validateDistrict(district);
+            const imageError = validateImage(image);
+            const myPlanError = validateMyPlan(myPlan);
+
+            if (nameError) {
+                return res.status(400).send({ error: nameError });
+            }
+            if (professionError) {
+                return res.status(400).send({ error: professionError });
+            }
+            if (professionRegisterError) {
+                return res.status(400).send({ error: professionRegisterError });
+            }
+            if (cpfError) {
+                return res.status(400).send({ error: cpfError });
+            }
+            if (cnpjError) {
+                return res.status(400).send({ error: cnpjError });
+            }
+            if (phoneError) {
+                return res.status(400).send({ error: phoneError });
+            }
+            if (genderError) {
+                return res.status(400).send({ error: genderError });
+            }
+            if (birthError) {
+                return res.status(400).send({ error: birthError });
+            }
+            if (zipCodeError) {
+                return res.status(400).send({ error: zipCodeError });
+            }
+            if (stateError) {
+                return res.status(400).send({ error: stateError });
+            }
+            if (cityError) {
+                return res.status(400).send({ error: cityError });
+            }
+            if (streetError) {
+                return res.status(400).send({ error: streetError });
+            }
+            if (numberError) {
+                return res.status(400).send({ error: numberError });
+            }
+            if (districtError) {
+                return res.status(400).send({ error: districtError });
+            }
+            if (imageError) {
+                return res.status(400).send({ error: imageError });
+            }
+            if (myPlanError) {
+                return res.status(400).send({ error: myPlanError });
+            }
 
             if (await Professional.findOne({ mail })) {
                 return res.status(400).send({ error: "Email já Cadastrado" })
@@ -48,171 +120,6 @@ const serviceController = {
                         return res.status(400).send({ error: "CNPJ já Cadastrado" })
                     }
                 }
-            }
-
-
-
-
-            // Validação Name
-            if (name == null || name == "" || name.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
-            }
-
-            if (!name.match(regexLetters)) {
-                return res.status(400).send({ alert: ["O campo Nome só permite letras"] });
-            }
-
-            if (name.length < 10 || name.length > 100) {
-                return res.status(400).send({ alert: ["Campo nome deve ter mais de 10 caracteres e menos de 100 caracteres!"] })
-            }
-
-
-
-
-
-            // Validação profession
-            if (profession == null || profession == "" || profession.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Profissão é obrigatório."] })
-            }
-
-            if (!profession.match(regexLetters)) {
-                return res.status(400).send({ alert: ["O campo Profissão só permite letras"] });
-            }
-
-
-
-
-
-            // Validação professionRegister
-            if (professionRegister == null || professionRegister == "" || professionRegister.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Registro do Profissional é obrigatório."] })
-            }
-
-
-
-
-
-            // Validação Email
-            if (mail == null || mail == "" || mail.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Registro do Profissional é obrigatório."] })
-            }
-            if (!mail.match(mailRegex)) {
-                return res.status(400).send({ alert: ["Formato de e-mail inválido"] });
-            }
-
-
-
-
-            // Validação cpf
-            if (cpf == null || cpf == "" || cpf.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo CPF é obrigatório."] })
-            }
-
-
-
-
-
-            // Validação cnpj
-            if (cnpj == null || cnpj == "" || cnpj.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo CNPJ é obrigatório."] })
-            }
-
-
-
-
-
-            // Validação phone
-            if (phone == null || phone == "" || phone.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Telefone é obrigatório."] })
-            }
-
-
-
-
-
-            // Validação sex
-            if (gender == null || gender == "" || gender.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Sexo é obrigatório."] })
-            }
-
-
-
-
-            // Validação birth
-            if (birth == null || birth == "" || birth.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Data de Nascimento é obrigatório."] })
-            }
-
-
-
-
-
-
-
-
-
-            // Validação zipCode
-            if (zipCode == null || zipCode == "" || zipCode.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Cep é obrigatório."] })
-            }
-
-
-
-
-
-
-            // Validação state
-            if (state == null || state == "" || state.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo estado é obrigatório."] })
-            }
-
-            if (state.length != 2) {
-                return res
-                    .status(400)
-                    .send({ alert: ["Quantidade de caracteres inválido. É pemitido apenas 2 caracteres no campo estado ex: SP."] });
-            }
-
-
-
-
-
-            // Validação city
-            if (city == null || city == "" || city.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Cidade é obrigatório."] })
-            }
-
-
-
-            // Validação street
-            if (street == null || street == "" || street.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Rua é obrigatório."] })
-            }
-
-
-
-            // Validação Numero
-            if (number == null || number == "" || number.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Numero é obrigatório."] })
-            }
-
-
-
-
-
-            // Validação district
-            if (district == null || district == "" || district.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Bairro é obrigatório."] })
-            }
-            if (!district.match(specialCharacters) || !district.match(regexLetters)) {
-                return res.status(400).send({ alert: ["O campo só permite letras, caso tenha numero, escreva-o por extenso."] });
-            }
-
-
-
-
-            // Validação image
-            if (image == null || image == "" || image.match(checkSpaces)) {
-                return res.status(400).send({ alert: ["O campo Imagem é obrigatório."] })
             }
 
 
@@ -234,6 +141,7 @@ const serviceController = {
                 number,
                 district,
                 image,
+                myPlan,
                 loginAttempts,
                 isBlocked
             };
@@ -286,34 +194,34 @@ const serviceController = {
 
     getMail: async (req, res) => {
         try {
-          const mail = req.params.mail;
-          const professional = await ProfessionalModel.findOne({ mail });
-      
-          if (!professional) {
-            res.status(404).json({ msg: "Profissional não encontrado" });
-            return;
-          }
-      
-          res.json(professional);
-        } catch (error) {
-          console.log(error);
-          res.status(500).json({ msg: "Ocorreu um erro ao buscar o profissional" });
-        }
-      },
+            const mail = req.params.mail;
+            const professional = await ProfessionalModel.findOne({ mail });
 
-      getPatients:async (req, res) => {
-        try {
-          const professionalId = req.params.id;
-            console.log(professionalId)
-          // Busque os pacientes vinculados ao profissional com o ID fornecido
-          const patients = await PatientModel.find({ professionalId: professionalId });
-      
-          res.json(patients);
+            if (!professional) {
+                res.status(404).json({ msg: "Profissional não encontrado" });
+                return;
+            }
+
+            res.json(professional);
         } catch (error) {
-          console.log(error);
-          res.status(500).json({ message: "Ocorreu um erro ao buscar os pacientes vinculados ao profissional" });
+            console.log(error);
+            res.status(500).json({ msg: "Ocorreu um erro ao buscar o profissional" });
         }
-      },
+    },
+
+    getPatients: async (req, res) => {
+        try {
+            const professionalId = req.params.id;
+            console.log(professionalId)
+            // Busque os pacientes vinculados ao profissional com o ID fornecido
+            const patients = await PatientModel.find({ professionalId: professionalId });
+
+            res.json(patients);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Ocorreu um erro ao buscar os pacientes vinculados ao profissional" });
+        }
+    },
 
     delete: async (req, res) => {
         try {
@@ -354,9 +262,24 @@ const serviceController = {
             number: req.body.number,
             district: req.body.district,
             image: req.body.image,
+            myPlan: req.body.myPlan,
             loginAttempts: req.body.loginAttempts,
             isBlocked: req.body.isBlocked
         };
+
+        if (await Professional.findOne({ mail })) {
+            return res.status(400).send({ error: "Email já Cadastrado" })
+        }
+        else {
+            if (await Professional.findOne({ cpf })) {
+                return res.status(400).send({ error: "CPF já Cadastrado" })
+            }
+            else {
+                if (await Professional.findOne({ cnpj })) {
+                    return res.status(400).send({ error: "CNPJ já Cadastrado" })
+                }
+            }
+        }
 
         const updatedService = await ProfessionalModel.findByIdAndUpdate(id, service);
 
@@ -367,10 +290,353 @@ const serviceController = {
 
         res.status(200).json({ updatedService, msg: "Cadastro atualizado com sucesso" })
 
+
+
+
+    },
+
+    updateMyPlan: async (req, res) => {
+        const id = req.params.id;
+
+        const service = {
+            myPlan: req.body.myPlan,
+        };
+
+        const updatedService = await ProfessionalModel.findByIdAndUpdate(id, service);
+
+        if (!updatedService) {
+            res.status(404).json({ msg: "Id não encontrado" });
+            return;
+        }
+
+        res.status(200).json({ id, service, msg: "Meu plano atualizado com sucesso" })
+
+    },
+
+
+};
+
+// Validação Name
+const validateName = (name) => {
+    if (name == null || name.trim() === '') {
+        return "O campo Nome é obrigatório.";
+    }
+
+    if (!name.match(regexLetters)) {
+        return "O campo Nome só permite letras.";
+    }
+
+    if (name.length > 100) {
+        return "Campo Nome deve ter no maximo 50 caracteres!";
+    }
+
+    return null; // Retorna null se a validação passar
+};
+
+
+// Validação profession
+const validateProfession = (profession) => {
+    if (profession == null || profession.trim() === '') {
+        return "O campo Profissão é obrigatório."
+    }
+
+    if (!profession.match(regexLetters)) {
+        return "O campo Profissão só permite letras.";
+    }
+
+    if (profession.length > 50) {
+        return "Campo Profissão deve ter no maximo 50 caracteres!";
+    }
+
+    return null; // Retorna null se a validação passar
+}
+
+
+// Validação professionRegister
+const validateProfessionRegister = (professionRegister) => {
+    if (professionRegister == null || professionRegister.trim() === '') {
+        return "O campo Registro do Profissional é obrigatório."
+    }
+
+    if (!professionRegister.match(regexNumeros)) {
+        return "O campo Registro do Profissional só aceita numeros."
+    }
+
+    if (professionRegister.length > 20) {
+        return "O campo Registro do Profissional deve ter no maximo 20 caracteres."
     }
 
 
 
-};
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação Email
+const validatEmail = (mail) => {
+    if (mail == null || mail.trim() === '') {
+        return "O campo Registro do Profissional é obrigatório."
+    }
+    if (!mail.match(mailRegex)) {
+        return "Formato de e-mail inválido."
+
+    }
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação cpf
+const validateCpf = (cpf) => {
+    if (cpf == null || cpf.trim() === '') {
+        return "O campo CPF é obrigatório."
+    }
+
+    if (!cpf.match(regexNumeros)) {
+        return "O campo CPF só aceita numeros."
+    }
+
+    if (!cpf.match(cpfRegex)) {
+        return "Formato inválido."
+    }
+
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação cnpj
+const validateCnpj = (cnpj) => {
+    if (cnpj == null || cnpj.trim() === '') {
+        return "O campo CNPJ é obrigatório."
+    }
+
+    if (!cnpj.match(regexNumeros)) {
+        return "O campo CNPJ só aceita numeros."
+    }
+
+    if (!cnpj.match(cnpjRegex)) {
+        return "CNPJ Inválido."
+    }
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação phone
+const validatePhone = (phone) => {
+    if (phone == null || phone.trim() === '') {
+        return "O campo Telefone é obrigatório."
+    }
+
+    if (!phone.match(regexNumeros)) {
+        return "O campo Telefone só aceita numeros."
+    }
+
+    if (phone.length > 20) {
+        return "O campo Telefone deve ser menor que 20 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação sex
+const validateGender = (gender) => {
+    if (gender == null || gender.trim() === '') {
+        return "O campo Sexo é obrigatório."
+    }
+
+    if (!gender.match(regexLetters)) {
+        return "O campo Sexo só aceita letras."
+    }
+
+    if (gender.length > 20) {
+        return "O campo Sexo deve ser menor que 20 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação birth
+const validateBirth = (birth) => {
+    if (birth == null || birth.trim() === '') {
+        return "O campo Data de Nascimento é obrigatório.";
+    }
+
+    const currentDate = new Date();
+    const birthDate = new Date(birth);
+
+    const ageDiff = currentDate.getFullYear() - birthDate.getFullYear();
+    const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+    const dayDiff = currentDate.getDate() - birthDate.getDate();
+
+    if (ageDiff < 18 || (ageDiff === 18 && (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)))) {
+        return "É necessário ter pelo menos 18 anos de idade.";
+    }
+
+    if (birthDate > currentDate) {
+        return "A data de nascimento deve ser anterior à data atual.";
+    }
+
+    const minYear = 1900;
+    const birthYear = birthDate.getFullYear();
+
+    if (birthYear < minYear) {
+        return "A data de nascimento deve ser a partir de 1900.";
+    }
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+
+// Validação zipCode
+const validateZipCode = (zipCode) => {
+    if (zipCode == null || zipCode.trim() === '') {
+        return "O campo Cep é obrigatório."
+    }
+
+    if (!zipCode.match(regexNumeros)) {
+        return "O campo Cep só aceita numeros."
+    }
+
+    if (zipCode.length > 20) {
+        return "O campo Cep deve ter menos de 20 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação state
+const validateState = (state) => {
+    if (state == null || state.trim() === '') {
+        return "O campo estado é obrigatório."
+    }
+
+    if (state.length != 2) {
+        return "Quantidade de caracteres inválido. É pemitido apenas 2 caracteres no campo estado ex: SP."
+    }
+
+    if (!state.match(regexLetters)) {
+        return "O campo estado só aceita letras."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação city
+const validateCity = (city) => {
+    if (city == null || city.trim() === '') {
+        return "O campo Cidade é obrigatório."
+    }
+
+    if (!city.match(regexLetters)) {
+        return "O campo Cidade só aceita letras."
+    }
+
+    if (city.length > 50) {
+        return "O campo Cidade deve ter no maximo 50 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+// Validação street
+const validateStreet = (street) => {
+    if (street == null || street.trim() === '') {
+        return "O campo Rua é obrigatório."
+    }
+
+    if (!street.match(regexLetters)) {
+        return "O campo Rua só aceita letras."
+    }
+
+    if (street.length > 50) {
+        return "O campo Rua deve ter no maximo 50 caracteres."
+    }
+    return null; // Retorna null se a validação passar
+}
+
+
+// Validação Numero
+const validateNumber = (number) => {
+    if (number == null || number.trim() === '') {
+        return "O campo Numero é obrigatório."
+    }
+
+    if (!number.match(regexNumeros)) {
+        return "O campo Numero só aceita numeros."
+    }
+
+    if (number.length > 1000) {
+        return "O campo Numero deve ser menor de 1000."
+    }
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+// Validação district
+const validateDistrict = (district) => {
+    if (district == null || district.trim() === '') {
+        return "O campo Bairro é obrigatório."
+    }
+    if (!district.match(regexLetters)) {
+        return "O campo Bairro só permite letras."
+    }
+
+    if (district.length > 50) {
+        return "O campo Bairro deve ter no maximo 50 caracteres."
+    }
+    return null; // Retorna null se a validação passar
+}
+
+
+
+
+// Validação image
+const validateImage = (image) => {
+    if (image == null || image.trim() === '') {
+        return "O campo Imagem é obrigatório."
+    }
+
+    return null; // Retorna null se a validação passar
+}
+
+const validateMyPlan = (myPlan) => {
+
+    if (myPlan == null || myPlan.trim() === '') {
+        return "O campo Meu Plano é obrigatório."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+
+
+
+
+
+
 
 module.exports = serviceController;

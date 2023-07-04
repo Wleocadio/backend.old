@@ -29,6 +29,10 @@ router
     .route("/schedules/MySchedule/:id")
     .get(authenticateToken, (req, res) => scheduleController.getMyShedule(req, res))
 
+router
+    .route("/schedules/patientSchedule/:id")
+    .get(authenticateToken, (req, res) => scheduleController.getPatientShedule(req, res))
+
 // Contar todos os cadastros, não está funcionando
 router
     .route("/schedules/count")

@@ -56,137 +56,122 @@ const patientController = {
         return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
       }
 
-      if (name.length < 10 || name.length > 100) {
-        return res.status(400).send({ alert: ["Campo nome deve ter mais de 10 caracteres e menos de 100 caracteres!"] })
+      if (name.length > 100) {
+        return res.status(400).send({ alert: ["Campo nome deve ter menos de 100 caracteres!"] })
       }
 
       //Validação CPF
       if (cpf == null || cpf == "" || cpf.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo cpf é obrigatório."] })
       }
 
 
 
       //Validação Email
       if (mail == null || mail == "" || mail.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo email é obrigatório."] })
       }
 
 
 
       //Validação Telefone
       if (phone == null || phone == "" || phone.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo telefone é obrigatório."] })
       }
 
 
 
       //Validação Contato de Emergencia
       if (emergencyContact == null || emergencyContact == "" || emergencyContact.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo telefone de emergencia é obrigatório."] })
       }
 
 
 
       //Validação Nome do contato de emergencia
       if (nameEmergencyContact == null || nameEmergencyContact == "" || nameEmergencyContact.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo nome de emergencia é obrigatório."] })
       }
 
 
 
       //Validação Sexo
       if (gender == null || gender == "" || gender.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo sexo é obrigatório."] })
       }
 
 
 
       //Validação Data de Nascimento
       if (dateBirth == null || dateBirth == "" || dateBirth.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo nascimento é obrigatório."] })
       }
 
 
       if (maritalStatus == null || maritalStatus == "" || maritalStatus.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo estado civil é obrigatório."] })
       }
 
 
 
       //Validação Cep
       if (zipCode == null || zipCode == "" || zipCode.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo cep é obrigatório."] })
       }
 
 
 
       //Validação estado
       if (state == null || state == "" || state.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo estado é obrigatório."] })
       }
 
 
 
       //Validação Cidade
       if (city == null || city == "" || city.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo cidade é obrigatório."] })
       }
 
 
 
       //Validação Bairro
       if (district == null || district == "" || district.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo bairro é obrigatório."] })
       }
 
 
 
       //Validação Rua
       if (street == null || street == "" || street.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo rua é obrigatório."] })
       }
 
 
 
       //Validação numero da residencia
       if (number == null || number == "" || number.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo numero é obrigatório."] })
       }
 
 
 
       //Validação Motivo da consulta
       if (initialDemand == null || initialDemand == "" || initialDemand.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo motivo da consulta é obrigatório."] })
       }
-
-
-      //Validação Observação
-      if (purposeTreatment == null || purposeTreatment == "" || purposeTreatment.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
-      }
-
-      if (patientEvolution == null || patientEvolution == "" || patientEvolution.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
-      }
-
-      if (generalNotes == null || generalNotes == "" || generalNotes.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
-      }
-
 
 
       //Validação imagem
       if (image == null || image == "" || image.match(checkSpaces)) {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo imagem é obrigatório."] })
       }
 
 
 
       //Validação ativo
       if (active == null || active == "") {
-        return res.status(400).send({ alert: ["O campo Nome é obrigatório."] })
+        return res.status(400).send({ alert: ["O campo ativo é obrigatório."] })
       }
 
 
@@ -261,6 +246,9 @@ const patientController = {
         res.status(404).json({ msg: "Id não encontrado" });
         return;
       }
+
+      //schedulesId.sort((a,b) => b.createdAt - a.createdAt)
+
       res.json(schedulesId);
     } catch (error) {
       console.log(error);

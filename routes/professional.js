@@ -54,5 +54,9 @@ router
     .route("/professional/:id")
     .put(authenticateToken, (req, res) => serviceController.update(req, res))
 
+router
+    .route("/professional/myPlan/:id")
+    .put(authenticateToken, (req, res) => serviceController.updateMyPlan(req, res))
+
 
 module.exports = router;

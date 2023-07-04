@@ -96,6 +96,19 @@ const scheduleController = {
       res.status(500).json({ message: "Ocorreu um erro ao buscar a Agenda do profissional" });
     }
   },
+  getPatientShedule: async (req, res) => {
+    try {
+      const patientId = req.params.id;
+      const schedulesId = await ScheduleModel.find({patientId: patientId});
+      console.log(patientId)
+      if (schedulesId.length === 0) {
+        return res.status(404).json({ msg: "Nenhum agendamento encontrado para o paciente" });
+      }
+      res.json(schedulesId);
+    } catch (error) {
+      res.status(500).json({ message: "Ocorreu um erro ao buscar a Agenda do paciente" });
+    }
+  },
   delete: async(req, res) => {
     try {
       const id = req.params.id;
