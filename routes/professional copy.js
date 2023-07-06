@@ -38,6 +38,9 @@ const upload = multer({
       fileSize: 2 * 512 * 512, // Limite de 2MB para o tamanho do arquivo
     }
   })
+
+
+
 //Login
 router.post("/login", serviceLogin.login)
 
@@ -45,9 +48,8 @@ router.post("/login", serviceLogin.login)
 
 // Criar Cadastro
 router
-    .route("/professional/create")
-    .post(upload.single('image'),(req, res) => serviceController.create(req, res));
-
+  .route("/professional/create")
+   .post(upload.single('image'), (req, res) => serviceController.create(req, res));
 
 // Buscar todos os cadastros
 router

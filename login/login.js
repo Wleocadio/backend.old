@@ -12,7 +12,7 @@ const serviceLogin = {
       const { mail, password } = req.body;    
       const user = await Professional.findOne({ mail });
       const maxLoginAttempts = 3;
-      console.log(mail, password)
+      //console.log(mail, password)
       //console.log(user)
       // Verifique se o usuário existe no banco de dados
       if (!user) {
@@ -25,6 +25,7 @@ const serviceLogin = {
       }
       const userName = user.name;
       const id = user.id;
+      const image = user.image;
       // Verifique a senha do usuário
       const passwordMatch = await bcrypty.compare(password, user.password);
            
@@ -50,7 +51,8 @@ const serviceLogin = {
       const token = jwt.sign({ userId: user._id }, env.authSecret, { expiresIn: '24h' });
       
       // Login bem-sucedido, retorna o token de acesso
-      res.json({id, userName, token });
+      //console.log(image)
+      res.json({id, userName, token, image });
       
     } catch (error) {
       console.log(error);

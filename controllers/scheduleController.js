@@ -1,6 +1,6 @@
 const { Schedule: ScheduleModel, Schedule, } = require('../models/schedule')
 const { Patient: PatientModel } = require('../models/patient')
-
+const moment = require('moment');
 
 const scheduleController = {
 
@@ -10,6 +10,14 @@ const scheduleController = {
     const vague = req.body.vague || false;
     const patientId = req.body.patientId; 
     const userID = req.userId; // Supondo que você tenha a informação do usuário logado
+
+    
+    const currentDate = moment().startOf('day');
+    const selectedDate = moment(date, 'YYYY-MM-DD').startOf('day');
+    //validação da data
+    if (!selectedDate.isSameOrAfter(currentDate)) {
+      return res.status(400).json({ error: "A data deve ser igual ou posterior à data atual" });
+    }
 
     try {
       const existingSchedule = await ScheduleModel.findOne({ professionalId: userID, date: new Date(date) });
@@ -61,7 +69,7 @@ const scheduleController = {
       const count = await ScheduleModel.find().countDocumets();
 
       res.json(count);
-      console.log(count)
+     // console.log(count)
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: 'An error occurred' });
@@ -87,7 +95,7 @@ const scheduleController = {
     try {
       const professionalId = req.params.id;
       const schedulesId = await ScheduleModel.find({professionalId: professionalId});
-      console.log(professionalId)
+     // console.log(professionalId)
       if (schedulesId.length === 0) {
         return res.status(404).json({ msg: "Nenhum agendamento encontrado para o profissional" });
       }
@@ -100,7 +108,7 @@ const scheduleController = {
     try {
       const patientId = req.params.id;
       const schedulesId = await ScheduleModel.find({patientId: patientId});
-      console.log(patientId)
+      //console.log(patientId)
       if (schedulesId.length === 0) {
         return res.status(404).json({ msg: "Nenhum agendamento encontrado para o paciente" });
       }
@@ -131,6 +139,7 @@ const scheduleController = {
   update: async (req, res)=>{
     const id = req.params.id;
 
+
     const service = {
       patientId:req.body.patient,
        date: req.body.date,
@@ -140,6 +149,19 @@ const scheduleController = {
        duration: req.body.duration,
        
     };
+
+    const currentDate = moment().startOf('day');
+    const selectedDate = moment(service.date, 'YYYY-MM-DD').startOf('day');
+    //validação da data
+    if (!selectedDate.isSameOrAfter(currentDate)) {
+      return res.status(400).json({ error: "A data deve ser igual ou posterior à data atual" });
+    }
+    //busca no bando os agendamentos que tem o id do profissional.
+    const existingSchedule = await ScheduleModel.findOne({ patientId: id, date: new Date(service.date) });
+
+    if (existingSchedule) {
+      return res.status(400).json({ error: "Já existe um resgistro nessa data e horário" })
+    }
 
     const updatedService = await ScheduleModel.findByIdAndUpdate(id, service);
 
