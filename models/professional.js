@@ -18,7 +18,7 @@ const professionalSchema = new mongoose.Schema({
     street:{ type: String, required: true },
     number:{ type: Number, required: true },
     district:{ type: String, required: true },
-    image:{ type: String},
+    image:{ type: Buffer, contentType: String},
     myPlan:{type: String, require:true},
     loginAttempts: {type: Number},
     isBlocked:{type: Boolean, required: true}
