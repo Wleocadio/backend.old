@@ -8,6 +8,8 @@ const scheduleSchema = new mongoose.Schema({
     notes: {type: String},
     vague: {type: Boolean, required:true},
     duration: {type: Number, required: true},
+    realized: {type: String},
+    consultationObervation: {type: String},
     patientId:{type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true},
     patientName: {type: String}
 },
