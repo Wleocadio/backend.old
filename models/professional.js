@@ -1,6 +1,27 @@
 const mongoose = require("mongoose")
 const bcrypty = require ('bcryptjs')
 
+const experienceSchema = new mongoose.Schema({
+    formation: {
+      type: String,
+    },
+    status: {
+      type: String,
+    },
+    course: {
+      type: String,
+    },
+    institution: {
+      type: String,
+    },
+    startDate: {
+      type: String,
+    },
+    endDate: {
+      type: String,
+    },
+  });
+
 const professionalSchema = new mongoose.Schema({
     name:{ type: String, required: true },
     profession:{ type: String, required: true },
@@ -20,9 +41,25 @@ const professionalSchema = new mongoose.Schema({
     district:{ type: String, required: true },
     image:{ type: Buffer, contentType: String},
     myPlan:{type: String, require:true},
+    specialties:{type: String },
+    experience:{type: String},
+    formation: {
+        type: [experienceSchema],
+        validate: {
+          validator: function (experiences) {
+            return experiences.length <= 7;
+          },
+          message: 'No máximo 7 experiências são permitidas.',
+        },
+      },// acertar a esse erro de 7 experiências.
+    
+    selfDescription:{type: String},
+    serviceValue:{type: Number},
     loginAttempts: {type: Number},
     isBlocked:{type: Boolean, required: true}
+    
 },
+
 {timestamps: true}
 );
 

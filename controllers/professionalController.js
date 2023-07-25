@@ -32,9 +32,14 @@ const serviceController = {
             const number = req.body.number || '';
             const district = req.body.district || '';
             const myPlan = req.body.myPlan || '';
+            const specialties = req.body.specialties || '';
+            const experience = req.body.experience || '';
+            const formation  = req.body.formation ||''
+            const selfDescription = req.body.selfDescription || '';
+            const serviceValue = req.body.serviceValue || '';
             const loginAttempts = req.body.loginAttempts || 0;
             const isBlocked = req.body.isBlocked || false;
-            const image = fs.readFileSync(req.file.path)
+            const image = fs.readFileSync(req.file.path) || '';
             //const imagePath = req.file.path;
 
             // chamada para validações dos campons
@@ -44,6 +49,7 @@ const serviceController = {
             const cpfError = validateCpf(cpf);
             const cnpjError = validateCnpj(cnpj);
             const mailError = validatEmail(mail);
+            const passwordError = validatPassword(password);
             const phoneError = validatePhone(phone);
             const genderError = validateGender(gender);
             const birthError = validateBirth(birth);
@@ -53,7 +59,7 @@ const serviceController = {
             const streetError = validateStreet(street);
             const numberError = validateNumber(number);
             const districtError = validateDistrict(district);
-            
+
             const myPlanError = validateMyPlan(myPlan);
 
 
@@ -68,6 +74,9 @@ const serviceController = {
             }
             if (mailError) {
                 return res.status(400).send({ error: mailError });
+            }
+            if (passwordError) {
+                return res.status(400).send({ error: passwordError });
             }
             if (cpfError) {
                 return res.status(400).send({ error: cpfError });
@@ -102,7 +111,7 @@ const serviceController = {
             if (districtError) {
                 return res.status(400).send({ error: districtError });
             }
-           
+
 
             if (myPlanError) {
                 return res.status(400).send({ error: myPlanError });
@@ -122,7 +131,7 @@ const serviceController = {
                 }
             }
 
-            
+
 
 
             const service = {
@@ -144,6 +153,11 @@ const serviceController = {
                 district,
                 image,
                 myPlan,
+                specialties,
+                experience,
+                formation,
+                selfDescription,
+                serviceValue,
                 loginAttempts,
                 isBlocked
             };
@@ -185,15 +199,33 @@ const serviceController = {
             const professionalId = await ProfessionalModel.findById(id);
 
             //const imageUrl = `/uploads/${professionalId.image}`
-            const imageUrl = `http://localhost:3000/uploads/${professionalId.image}`;
+           // const imageUrl = `http://localhost:3000/uploads/${professionalId.image}`;
 
             //console.log(professionalId)
             if (!professionalId) {
                 res.status(404).json({ msg: "Id não encontrado" });
                 return;
             }
-            professionalId.image = imageUrl
+            //professionalId.image = imageUrl
             res.status(200).json({ professionalId });
+        } catch (error) {
+            console.log(error);
+        }
+    },
+
+    getPhoto: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const professionalId = await ProfessionalModel.findById(id);
+
+            if (!professionalId) {
+                res.status(404).json({ msg: "Id não encontrado" });
+                return;
+            }
+
+            const image = professionalId.image
+
+            res.status(200).json({ image });
         } catch (error) {
             console.log(error);
         }
@@ -248,7 +280,7 @@ const serviceController = {
         }
 
     },
-
+    
     update: async (req, res) => {
         const id = req.params.id;
 
@@ -270,6 +302,11 @@ const serviceController = {
             district: req.body.district,
             image: req.body.image,
             myPlan: req.body.myPlan,
+            specialties: req.body.specialties,
+            experience: req.body.experience,
+            formation: req.body.formation,
+            selfDescription: req.body.selfDescription ,
+            serviceValue: req.body.serviceValue,
             loginAttempts: req.body.loginAttempts,
             isBlocked: req.body.isBlocked
 
@@ -290,9 +327,13 @@ const serviceController = {
         const streetError = validateStreet(service.street);
         const numberError = validateNumber(service.number);
         const districtError = validateDistrict(service.district);
-        const imageError = validateImage(service.image);
         const myPlanError = validateMyPlan(service.myPlan);
-
+        const specialties = validateSpecialties(service.specialties);
+        const experience = validateExperience(service.experience);
+        const formation = validateFormation(service.formation);
+        const selfDescription = validateSelfDescription(service.selfDescription);
+        const serviceValue = validateServiceValue(service.serviceValue);
+//specialties experience formation selfDescription  serviceValue
 
 
         if (nameError) {
@@ -340,12 +381,25 @@ const serviceController = {
         if (districtError) {
             return res.status(400).send({ error: districtError });
         }
-        if (imageError) {
-            return res.status(400).send({ error: imageError });
-        }
         if (myPlanError) {
             return res.status(400).send({ error: myPlanError });
         }
+        if (specialties) {
+            return res.status(400).send({ error: specialties });
+        }
+        if (experience) {
+            return res.status(400).send({ error: experience });
+        }
+        if (formation) {
+            return res.status(400).send({ error: formation });
+        }
+        if (selfDescription) {
+            return res.status(400).send({ error: selfDescription });
+        }
+        if (serviceValue) {
+            return res.status(400).send({ error: serviceValue });
+        }
+
 
 
         const updatedService = await ProfessionalModel.findByIdAndUpdate(id, service);
@@ -377,8 +431,33 @@ const serviceController = {
 
     },
 
+    updateMyImage: async (req, res) => {
+        const id = req.params.id;
+        const image = fs.readFileSync(req.file.path)
+        const service = {
+            image
+        };
+
+        const updatedService = await ProfessionalModel.findByIdAndUpdate(id, service);
+
+        if (!updatedService) {
+            res.status(404).json({ msg: "Id não encontrado" });
+            return;
+        }
+
+        res.status(200).json({ id, service, msg: "Foto do Perfil atualizada com sucesso" })
+
+    },
+
 
 };
+
+
+
+
+
+
+
 
 // Validação Name
 const validateName = (name) => {
@@ -444,6 +523,18 @@ const validatEmail = (mail) => {
     }
     if (!mail.match(mailRegex)) {
         return "Formato de e-mail inválido."
+
+    }
+    return null; // Retorna null se a validação passar
+}
+
+// Validação password
+const validatPassword = (password) => {
+    if (password == null || password.trim() === '') {
+        return "O campo Registro do Profissional é obrigatório."
+    }
+    if (password.length < 5) {
+        return "O campo senha deve ser maior que 5 caracteres"
 
     }
     return null; // Retorna null se a validação passar
@@ -690,8 +781,66 @@ const validateMyPlan = (myPlan) => {
 
     return null; // Retorna null se a validação passar
 }
+//specialties experience formation selfDescription  serviceValue
+
+const validateSpecialties = (specialties) => {
+
+    if (!specialties.match(regexLetters)) {
+        return "O campo Especialidades só aceita letras."
+    }
+    if (specialties.length > 400) {
+        return "O campo Especialidades deve ter no maximo 400 caracteres."
+    }
 
 
+    return null; // Retorna null se a validação passar
+}
+
+const validateExperience = (experience) => {
+
+    if (experience.length > 1000) {
+        return "O campo Experiencia deve ter no maximo 1000 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+const validateFormation = (formation) => {
+
+    if (!formation.match(regexLetters)) {
+        return "O campo Formação só aceita letras."
+    }
+    if (formation.length > 400) {
+        return "O campo Formação deve ter no maximo 400 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+const validateSelfDescription = (selfDescription) => {
+
+    if (!selfDescription.match(regexLetters)) {
+        return "O campo Descrição Pessoal só aceita letras."
+    }
+    if (selfDescription.length > 500) {
+        return "O campo Descrição Pessoal deve ter no maximo 500 caracteres."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
+const validateServiceValue = (serviceValue) => {
+
+    if (!serviceValue.match(regexNumeros)) {
+        return "O campo Valor da Sessão só aceita numeros."
+    }
+    if (serviceValue.length > 5) {
+        return "O campo Valor da Sessão não pode ser maior que 10000."
+    }
+
+
+    return null; // Retorna null se a validação passar
+}
 
 
 
