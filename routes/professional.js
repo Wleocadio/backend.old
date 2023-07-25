@@ -11,11 +11,11 @@ function fileFilter(req, file, cb) {
     const allowedExtensions = ['.jpg', '.jpeg', '.png'];
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowedExtensions.includes(ext)) {
-      cb(null, true); // Aceita o arquivo
+        cb(null, true); // Aceita o arquivo
     } else {
-      cb(new Error('Formato de arquivo inválido. Aceitamos apenas imagens JPG ou PNG.'), false);
+        cb(new Error('Formato de arquivo inválido. Aceitamos apenas imagens JPG ou PNG.'), false);
     }
-  }
+}
 
 // Configuração do multer
 const storage = multer.diskStorage({
@@ -35,9 +35,9 @@ const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-      fileSize: 2 * 512 * 512, // Limite de 2MB para o tamanho do arquivo
+        fileSize: 2 * 512 * 512, // Limite de 2MB para o tamanho do arquivo
     }
-  })
+})
 //Login
 router.post("/login", serviceLogin.login)
 
@@ -46,7 +46,11 @@ router.post("/login", serviceLogin.login)
 // Criar Cadastro
 router
     .route("/professional/create")
-    .post(upload.single('image'),(req, res) => serviceController.create(req, res));
+    .post(upload.single('image'), (req, res) => serviceController.create(req, res));
+
+//router
+   // .route("/professional/create")
+   // .post((req, res) => serviceController.create(req, res));
 
 
 // Buscar todos os cadastros
@@ -59,6 +63,10 @@ router
 router
     .route("/professional/:id")
     .get(authenticateToken, (req, res) => serviceController.get(req, res))
+
+router
+    .route("/professional/photo/:id")
+    .get(authenticateToken, (req, res) => serviceController.getPhoto(req, res))
 
 router
     .route("/professional/mail/:mail")
@@ -90,7 +98,9 @@ router
     .route("/professional/myPlan/:id")
     .put(authenticateToken, (req, res) => serviceController.updateMyPlan(req, res))
 
-
+router
+    .route("/professional/photo/:id")
+    .put(upload.single('image'), (req, res) => serviceController.updateMyImage(req, res))
 
 
 
