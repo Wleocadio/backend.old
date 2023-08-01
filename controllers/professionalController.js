@@ -300,7 +300,6 @@ const serviceController = {
             street: req.body.street,
             number: req.body.number,
             district: req.body.district,
-            image: req.body.image,
             myPlan: req.body.myPlan,
             specialties: req.body.specialties,
             experience: req.body.experience,
@@ -311,7 +310,7 @@ const serviceController = {
             isBlocked: req.body.isBlocked
 
         };
-
+/*
         const nameError = validateName(service.name);
         const professionError = validateProfession(service.profession);
         const professionRegisterError = validateProfessionRegister(service.professionRegister);
@@ -330,13 +329,13 @@ const serviceController = {
         const myPlanError = validateMyPlan(service.myPlan);
         const specialties = validateSpecialties(service.specialties);
         const experience = validateExperience(service.experience);
-        const formation = validateFormation(service.formation);
-        const selfDescription = validateSelfDescription(service.selfDescription);
-        const serviceValue = validateServiceValue(service.serviceValue);
+       // const formation = validateFormation(service.formation);
+       // const selfDescription = validateSelfDescription(service.selfDescription);
+       // const serviceValue = validateServiceValue(service.serviceValue);
 //specialties experience formation selfDescription  serviceValue
 
-
-        if (nameError) {
+*/
+       /* if (nameError) {
             return res.status(400).send({ error: nameError });
         }
         if (professionError) {
@@ -390,7 +389,7 @@ const serviceController = {
         if (experience) {
             return res.status(400).send({ error: experience });
         }
-        if (formation) {
+        /*if (formation) {
             return res.status(400).send({ error: formation });
         }
         if (selfDescription) {
@@ -398,7 +397,7 @@ const serviceController = {
         }
         if (serviceValue) {
             return res.status(400).send({ error: serviceValue });
-        }
+        }*/
 
 
 
@@ -785,9 +784,6 @@ const validateMyPlan = (myPlan) => {
 
 const validateSpecialties = (specialties) => {
 
-    if (!specialties.match(regexLetters)) {
-        return "O campo Especialidades só aceita letras."
-    }
     if (specialties.length > 400) {
         return "O campo Especialidades deve ter no maximo 400 caracteres."
     }
@@ -800,18 +796,6 @@ const validateExperience = (experience) => {
 
     if (experience.length > 1000) {
         return "O campo Experiencia deve ter no maximo 1000 caracteres."
-    }
-
-
-    return null; // Retorna null se a validação passar
-}
-const validateFormation = (formation) => {
-
-    if (!formation.match(regexLetters)) {
-        return "O campo Formação só aceita letras."
-    }
-    if (formation.length > 400) {
-        return "O campo Formação deve ter no maximo 400 caracteres."
     }
 
 

@@ -41,7 +41,7 @@ const professionalSchema = new mongoose.Schema({
     district:{ type: String, required: true },
     image:{ type: Buffer, contentType: String},
     myPlan:{type: String, require:true},
-    specialties:{type: String },
+    specialties:[String],
     experience:{type: String},
     formation: {
         type: [experienceSchema],
